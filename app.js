@@ -11,15 +11,20 @@ const app = {}
 // contoh script pembuatan folder
  app.makeFolder = () => {
     rl.question("Masukan Nama Folder : ",(folderName) => {
-        fs.mkdir(__dirname + `/${folderName}`,() => {
-            console.log("success created new folder");
-            
-        })
-        rl.close()
-    })
+        try {
+            fs.mkdir(__dirname + `/${folderName}`,() => {
+            console.log("success created new folder " + folderName);
+            });
+        } catch (error) {
+            console.log("failed created new folder " + folderName);
+        } finally {
+            rl.close();
+        }  
+    });
 } 
 
 // To Do : lanjutkan pembuatan logic disini 
+
 
 
 module.exports = app
