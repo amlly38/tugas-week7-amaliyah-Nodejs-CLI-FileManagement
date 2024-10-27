@@ -127,4 +127,36 @@ app.readFolder = () => {
         })
 };
 
+// case "read-file":
+app.readFile = () => {
+    rl.question("Masukan Nama Folder letak File yang ingin dibaca: ",(folder) => {
+        rl.question("Masukan Nama File yang ingin dibaca (lengkap dengan extensi): ",(fileName) => {
+            const filePath = path.join(__dirname, folder, fileName);
+            const ext = fileName.split(".").pop().toLowerCase();
+
+            const imageExt = ["jpg", "png", "jpeg", "gif", "svg", "webp", "bmp"];
+            const textExt = ["txt", "pdf", "md", "json", "csv", "html"];
+
+            if(imageExt.includes(ext)) {
+                console.log(`File ini adalah gambar: ${fileName}.\nSilahkan pilih file lainnya.`);
+                rl.close();
+                return;
+            } else if(!textExt.includes(ext)) {
+                console.log(`File ini bukan text yang dapat dibaca. Silahkan pilih file lainnya.`);
+                rl.close();
+                return;
+            }
+            
+            fs.readFile(filePath, "utf8", (err, data) => {
+                if (err) {
+                    console.error(`Unsuccess read file: ${fileName}.\nError: ${err.message}`);
+                } else {
+                    console.log(`Isi dari file ${fileName}:\n\n${data}`);
+                }
+                rl.close();
+            });
+        })
+    })
+}
+
 module.exports = app
