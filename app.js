@@ -27,6 +27,22 @@ const app = {}
 
 // To Do : lanjutkan pembuatan logic disini 
 
-
+// case "make-file":
+app.makeFile = () => {
+    rl.question("Masukan Nama Folder : ",(folder) => {
+        rl.question("Masukan Nama File : ",(fileName) => {
+            rl.question("Masukan Extensi File : ",(ext) => {
+                try {
+                    fs.writeFileSync(path.join(`${folder}/${fileName}.${ext}`), "");
+                    console.log(`success created new file ${fileName}.${ext} in folder ${folder}`);
+                } catch (error) {
+                    console.log(`failed created new file ${fileName}.${ext} in folder ${folder}\nerror: ${error.message}`);
+                } finally {
+                    rl.close();
+                }
+            })
+        })
+    })
+}
 
 module.exports = app
