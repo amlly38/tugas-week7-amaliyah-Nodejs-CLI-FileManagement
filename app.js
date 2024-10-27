@@ -45,4 +45,38 @@ app.makeFile = () => {
     })
 }
 
+// case "ext-sorter":
+app.extSorter = () => {
+    try {
+        const res = fs.readdirSync("unorganize_folder");
+
+        const rename = (folderName, element) => {
+            fs.mkdir(__dirname + `/${folderName}`,() => {
+                fs.rename(
+                    __dirname + "/unorganize_folder"+ "/" + element,
+                    __dirname + `/${folderName}`+ "/" + element,
+                    (err) => {}
+                );
+            });
+        };
+
+        for (let index = 0; index < res.length; index++) {
+            const element = res[index];
+            const ext = element.split(".")[element.split(".").length - 1];
+            if (["txt", "pdf", "md", "json", "csv", "html"].includes(ext)) {
+                rename("text", element);
+            } else if (["jpg", "png", "jpeg", "gif", "svg", "webp", "bmp"].includes(ext)) {
+                rename("image", element);
+            } else {
+                rename("other", element);
+            }
+        }
+         console.log("success sort file");
+    } catch (error) {
+        console.log("failed sort file" + error.message);
+    } finally {
+        rl.close();
+    }
+}
+
 module.exports = app
