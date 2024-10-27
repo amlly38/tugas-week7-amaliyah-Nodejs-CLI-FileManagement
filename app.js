@@ -79,4 +79,52 @@ app.extSorter = () => {
     }
 }
 
+// case "read-folder":
+app.readFolder = () => {
+    rl.question("Masukan Nama Folder untuk dibaca: ",(folderName) => {
+        const res = fs.readdirSync(folderName);
+
+        const output = [];
+
+        const imageExt = ["jpg", "png", "jpeg", "gif", "svg", "webp", "bmp"];
+        const textExt = ["txt", "pdf", "md", "json", "csv", "html"];
+        for (let index = 0; index < res.length; index++) {
+            const element = res[index];
+            try {
+                const stat = fs.statSync(__dirname + `/${folderName}` + "/" + element);
+                const ext = element.split(".")[element.split(".").length - 1];
+
+                let jenisFile = "undefined";
+                if(stat.isDirectory()) {
+                    jenisFile = "folder";
+                } else if (imageExt.includes(ext)) {
+                    jenisFile = "gambar";
+                } else if (textExt.includes(ext)) {
+                    jenisFile = "text";
+                }
+
+                let ukuranFile = "";
+                if(stat.size > 1024576) {
+                    ukuranFile = `${(stat.size / 1048576).toFixed(2)}mb`;
+                } else {
+                    ukuranFile = `${(stat.size / 1024).toFixed(2)}kb`;
+                }
+
+                output.push({
+                    namaFile : element,
+                    extensi : ext,
+                    jenisFile : jenisFile,
+                    tanggalDibuat : stat.birthtime.toISOString().split("T")[0],
+                    ukuranFile : ukuranFile,
+                })
+
+            } catch (err) {
+                console.log("Unsuccess read file : " + folderName + "/" + folderName, element);
+                }
+            }
+            console.log(output);
+            rl.close()
+        })
+};
+
 module.exports = app
